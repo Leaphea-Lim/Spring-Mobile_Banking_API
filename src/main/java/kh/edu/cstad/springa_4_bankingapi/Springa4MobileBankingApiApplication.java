@@ -24,41 +24,41 @@ public class Springa4MobileBankingApiApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        KYC kyc = new KYC();
-        Customer customer = new Customer();
-
-        kyc.setNationalCardId("000111222");
-        kyc.setIsVerified(false);
-        kyc.setIsDeleted(false);
-        kyc.setCustomer(customer);
-
-        customer.setFullName("leaphea lala");
-        customer.setGender("F");
-        customer.setEmail("lim@gmail.com");
-        customer.setPhoneNumber("123456789");
-        customer.setKyc(kyc);
-        customer.setRemark("STUDENT");
-        customer.setIsDeleted(false);
-
-        customerRepository.save(customer);
-
-        //
-        Customer sender = customerRepository.save(customer);
-        Customer receiver = customerRepository.save(customer);
-
-        TransactionType transferType = new TransactionType();
-        transferType.setName("TRANSFER");
-        transferType.setIsDeleted(false);
-        transactionTypeRepository.save(transferType);
-
-        Transaction transaction = new Transaction();
-        transaction.setTransactionType(transferType);
-        transaction.setSender(sender);
-        transaction.setReceiver(receiver);
-        transaction.setAmount(150.0);
-        transaction.setRemark("Loan repayment");
-        transaction.setIsDeleted(false);
-        transactionRepository.save(transaction);
+//        KYC kyc = new KYC();
+//        Customer customer = new Customer();
+//
+//        kyc.setNationalCardId("000111222");
+//        kyc.setIsVerified(false);
+//        kyc.setIsDeleted(false);
+//        kyc.setCustomer(customer);
+//
+//        customer.setFullName("leaphea lala");
+//        customer.setGender("F");
+//        customer.setEmail("lim@gmail.com");
+//        customer.setPhoneNumber("123456789");
+//        customer.setKyc(kyc);
+//        customer.setRemark("STUDENT");
+//        customer.setIsDeleted(false);
+//
+//        customerRepository.save(customer);
+//
+//        //
+//        Customer sender = customerRepository.save(customer);
+//        Customer receiver = customerRepository.save(customer);
+//
+//        TransactionType transferType = new TransactionType();
+//        transferType.setName("TRANSFER");
+//        transferType.setIsDeleted(false);
+//        transactionTypeRepository.save(transferType);
+//
+//        Transaction transaction = new Transaction();
+//        transaction.setTransactionType(transferType);
+//        transaction.setSender(sender);
+//        transaction.setReceiver(receiver);
+//        transaction.setAmount(150.0);
+//        transaction.setRemark("Loan repayment");
+//        transaction.setIsDeleted(false);
+//        transactionRepository.save(transaction);
 
 
     }
