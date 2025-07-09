@@ -15,14 +15,12 @@ public class KYC {
     @Id
 //    @GeneratedValue(strategy = GenerationType.UUID)
     private Integer id; //id-> uuid
-
-
-    @Column(unique = true)
+//    @Column(unique = true)
     private String nationalCardId;
     private Boolean isVerified;
     private Boolean isDeleted;
 
-    @OneToOne(mappedBy = "kyc")
+    @OneToOne
     @MapsId
     @JoinColumn(name = "cust_id")
     private Customer customer;

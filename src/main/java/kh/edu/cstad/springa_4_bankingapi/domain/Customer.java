@@ -42,7 +42,7 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private List<Account> accounts;
 
-    @OneToOne
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
 //    @JoinColumn(unique = true)
     @PrimaryKeyJoinColumn
     private KYC kyc;

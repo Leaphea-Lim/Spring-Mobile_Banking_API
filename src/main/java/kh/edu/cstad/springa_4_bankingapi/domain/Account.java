@@ -20,8 +20,8 @@ public class Account {
     @Column(unique = true, nullable = false, length = 32)
     private String accountNumber;
 
-    @Column(nullable = false, length = 50)
-    private String accountType ;
+//    @Column(nullable = false, length = 50) -> custom column
+//    private String accountType ;
 
     @Column(nullable = false, length = 50)
     private String accountCurrency;
@@ -36,5 +36,9 @@ public class Account {
     @JoinColumn(name = "cust_id")
 //customise the name
     private Customer customer;
+
+    @ManyToOne
+//    @JoinColumn(name = "account_type")
+    private AccountType accountType;
 
 }
