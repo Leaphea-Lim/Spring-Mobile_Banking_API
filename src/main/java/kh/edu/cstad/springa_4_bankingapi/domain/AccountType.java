@@ -12,12 +12,15 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
+@Table(name = "accountTypes")
 public class AccountType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto implement on primary key
-    private Integer accountTypeId;
+    private Integer id;
+
+    @Column(nullable = false)
     private String accountType;
-    private Boolean isDeleted;
+//    private Boolean isDeleted;
 
     @OneToMany(mappedBy = "accountType")
     private List<Account> accounts;

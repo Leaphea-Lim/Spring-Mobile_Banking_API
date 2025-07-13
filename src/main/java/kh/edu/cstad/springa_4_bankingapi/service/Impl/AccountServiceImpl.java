@@ -12,7 +12,6 @@ import kh.edu.cstad.springa_4_bankingapi.repository.AccountTypeRepository;
 import kh.edu.cstad.springa_4_bankingapi.repository.CustomerRepository;
 import kh.edu.cstad.springa_4_bankingapi.service.AccountService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,7 +20,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
@@ -48,6 +46,14 @@ public class AccountServiceImpl implements AccountService {
                         HttpStatus.NOT_FOUND, "Customer Not Found"
                 ));
 
+        if(accountRepository.existsByAccountNumber(createAccountRequest.accountNumber())){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Account Number already exists!");
+        }
+
+        if(!customerRepository.existsById(createAccountRequest.customerId())){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer Not Found!");
+        }
+
         AccountType accountType = accountTypeRepository.findById(createAccountRequest.accountType())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Account type not found"));
@@ -58,7 +64,7 @@ public class AccountServiceImpl implements AccountService {
         account.setAccountType(accountType);
         account.setIsDeleted(false);
 
-        account = accountRepository.save(account);
+        accountRepository.save(account);
 
         return accountMapper.fromAccount(account);
     }
@@ -90,8 +96,7 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(()-> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Account Not Found"
                 ));
-
-        // Handle Customer if customerId is provided and changed
+        /*
         if (updateAccountRequest.customerId() != null &&
                 !updateAccountRequest.customerId().equals(account.getCustomer().getId())) {
 
@@ -101,8 +106,6 @@ public class AccountServiceImpl implements AccountService {
                     ));
             account.setCustomer(newCustomer);
         }
-
-        // Handle AccountType if accountTypeId is provided and changed
         if (updateAccountRequest.accountType() != null &&
                 !updateAccountRequest.accountType().equals(account.getAccountType().getAccountTypeId())) {
 
@@ -113,8 +116,10 @@ public class AccountServiceImpl implements AccountService {
             account.setAccountType(newAccountType);
         }
 
+         */
+
         accountMapper.toAccountPartially(updateAccountRequest, account);
-        account = accountRepository.save(account);
+        accountRepository.save(account);
         return accountMapper.fromAccount(account);
     }
 

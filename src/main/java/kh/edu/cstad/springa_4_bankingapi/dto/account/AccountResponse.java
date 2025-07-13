@@ -5,11 +5,11 @@ import lombok.Builder;
 @Builder
 public record AccountResponse(
         String fullName,
-        String accountNumber,
+//        String accountNumber,
         String accountCurrency,
-        Double balance,
-        Integer accountTypeId,
-        String accountType
+        Double balance
+//        Integer accountTypeId,
+//        String accountType
 
 ) {
 }

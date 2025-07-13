@@ -5,16 +5,15 @@ import jakarta.validation.constraints.NotNull;
 
 public record UpdateAccountRequest(
 
-        @NotBlank(message = "Currency is required")
-        String accountCurrency,
+        String accountNumber,
 
-        @NotNull(message = "Balance is required")
+        Integer accountTypeId,
+
         Double balance,
 
-        @NotNull(message = "Customer ID is required")
-        Integer customerId,
+        String accountCurrency,
 
-        @NotNull(message = "Account Type ID is required")
-        Integer accountType
+        Integer customerId
+
 ){
 }

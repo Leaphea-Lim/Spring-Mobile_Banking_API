@@ -15,7 +15,7 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(unique = true, nullable = false, length = 32)
     private String accountNumber;
@@ -33,7 +33,7 @@ public class Account {
     private Boolean isDeleted;
 
     @ManyToOne
-    @JoinColumn(nullable = false, name = "cust_id")
+    @JoinColumn(name = "cust_id")
     private Customer customer;
 
     @ManyToOne

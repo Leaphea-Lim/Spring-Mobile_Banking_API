@@ -11,24 +11,18 @@ import org.mapstruct.*;
 public interface AccountMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "customer", ignore = true)
-    @Mapping(target = "accountType", ignore = true)
-    void toAccountPartially(UpdateAccountRequest dto, @MappingTarget Account entity);
+    void toAccountPartially(UpdateAccountRequest updateAccountRequest, @MappingTarget Account account);
 
     @Mapping(target = "fullName", source = "customer.fullName")
-    @Mapping(target = "accountTypeId", source = "accountType.accountTypeId")
-    @Mapping(target = "accountType", source = "accountType.accountType")
     AccountResponse fromAccount(Account account);
-
-    Account toAccount(CreateAccountRequest dto);
-
+    Account toAccount(CreateAccountRequest createAccountRequest);
 
     default AccountType map(Integer id) {
         if (id == null) {
             return null;
         }
         AccountType at = new AccountType();
-        at.setAccountTypeId(id);
+        at.setId(id);
         return at;
     }
 

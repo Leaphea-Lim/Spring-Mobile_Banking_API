@@ -22,5 +22,6 @@ public record CreateAccountRequest(
         @NotNull(message = "Account Type ID is required")
         Integer accountType
 
+
 ) {
 }

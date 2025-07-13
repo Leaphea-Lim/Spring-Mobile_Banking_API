@@ -34,6 +34,8 @@ public class Springa4MobileBankingApiApplication implements CommandLineRunner {
 //            accountTypeRepository.save(current);
 
             System.out.println("Default account types inserted: Savings");
+        }else{
+            System.out.println("'Savings' account type already exists.");
         }
     }
 
