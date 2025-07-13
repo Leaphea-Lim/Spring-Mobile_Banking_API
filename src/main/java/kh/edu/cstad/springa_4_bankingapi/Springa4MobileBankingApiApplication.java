@@ -1,9 +1,7 @@
 package kh.edu.cstad.springa_4_bankingapi;
 
-import kh.edu.cstad.springa_4_bankingapi.domain.Customer;
-import kh.edu.cstad.springa_4_bankingapi.domain.KYC;
-import kh.edu.cstad.springa_4_bankingapi.domain.Transaction;
-import kh.edu.cstad.springa_4_bankingapi.domain.TransactionType;
+import kh.edu.cstad.springa_4_bankingapi.domain.*;
+import kh.edu.cstad.springa_4_bankingapi.repository.AccountTypeRepository;
 import kh.edu.cstad.springa_4_bankingapi.repository.CustomerRepository;
 import kh.edu.cstad.springa_4_bankingapi.repository.TransactionRepository;
 import kh.edu.cstad.springa_4_bankingapi.repository.TransactionTypeRepository;
@@ -20,47 +18,23 @@ public class Springa4MobileBankingApiApplication implements CommandLineRunner {
     private final CustomerRepository customerRepository;
     private final TransactionRepository transactionRepository;
     private final TransactionTypeRepository transactionTypeRepository;
+    private final AccountTypeRepository accountTypeRepository;
+
 
     @Override
     public void run(String... args) throws Exception {
+        if (accountTypeRepository.count() == 0) {
+            AccountType savings = new AccountType();
+            savings.setAccountType("Savings");
 
-//        KYC kyc = new KYC();
-//        Customer customer = new Customer();
-//
-//        kyc.setNationalCardId("000111222");
-//        kyc.setIsVerified(false);
-//        kyc.setIsDeleted(false);
-//        kyc.setCustomer(customer);
-//
-//        customer.setFullName("leaphea lala");
-//        customer.setGender("F");
-//        customer.setEmail("lim@gmail.com");
-//        customer.setPhoneNumber("123456789");
-//        customer.setKyc(kyc);
-//        customer.setRemark("STUDENT");
-//        customer.setIsDeleted(false);
-//
-//        customerRepository.save(customer);
-//
-//        //
-//        Customer sender = customerRepository.save(customer);
-//        Customer receiver = customerRepository.save(customer);
-//
-//        TransactionType transferType = new TransactionType();
-//        transferType.setName("TRANSFER");
-//        transferType.setIsDeleted(false);
-//        transactionTypeRepository.save(transferType);
-//
-//        Transaction transaction = new Transaction();
-//        transaction.setTransactionType(transferType);
-//        transaction.setSender(sender);
-//        transaction.setReceiver(receiver);
-//        transaction.setAmount(150.0);
-//        transaction.setRemark("Loan repayment");
-//        transaction.setIsDeleted(false);
-//        transactionRepository.save(transaction);
+//            AccountType current = new AccountType();
+//            current.setAccountType("Current");
 
+            accountTypeRepository.save(savings);
+//            accountTypeRepository.save(current);
 
+            System.out.println("Default account types inserted: Savings");
+        }
     }
 
     public static void main(String[] args) {

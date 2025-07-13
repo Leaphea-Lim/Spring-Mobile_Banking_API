@@ -33,12 +33,10 @@ public class Account {
     private Boolean isDeleted;
 
     @ManyToOne
-    @JoinColumn(name = "cust_id")
-//customise the name
+    @JoinColumn(nullable = false, name = "cust_id")
     private Customer customer;
 
     @ManyToOne
-//    @JoinColumn(name = "account_type")
     private AccountType accountType;
 
 }

@@ -1,4 +1,4 @@
-package kh.edu.cstad.springa_4_bankingapi.dto;
+package kh.edu.cstad.springa_4_bankingapi.dto.customer;
 
 import jakarta.validation.constraints.NotBlank;
 

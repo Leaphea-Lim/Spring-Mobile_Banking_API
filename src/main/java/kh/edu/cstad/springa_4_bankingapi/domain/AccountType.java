@@ -15,8 +15,8 @@ import java.util.List;
 public class AccountType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto implement on primary key
-    private Integer id;
-    private String name;
+    private Integer accountTypeId;
+    private String accountType;
     private Boolean isDeleted;
 
     @OneToMany(mappedBy = "accountType")
