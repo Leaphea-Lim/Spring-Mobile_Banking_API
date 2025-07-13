@@ -96,27 +96,6 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(()-> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Account Not Found"
                 ));
-        /*
-        if (updateAccountRequest.customerId() != null &&
-                !updateAccountRequest.customerId().equals(account.getCustomer().getId())) {
-
-            Customer newCustomer = customerRepository.findById(updateAccountRequest.customerId())
-                    .orElseThrow(() -> new ResponseStatusException(
-                            HttpStatus.NOT_FOUND, "Customer not found"
-                    ));
-            account.setCustomer(newCustomer);
-        }
-        if (updateAccountRequest.accountType() != null &&
-                !updateAccountRequest.accountType().equals(account.getAccountType().getAccountTypeId())) {
-
-            AccountType newAccountType = accountTypeRepository.findById(updateAccountRequest.accountType())
-                    .orElseThrow(() -> new ResponseStatusException(
-                            HttpStatus.NOT_FOUND, "Account type not found"
-                    ));
-            account.setAccountType(newAccountType);
-        }
-
-         */
 
         accountMapper.toAccountPartially(updateAccountRequest, account);
         accountRepository.save(account);
