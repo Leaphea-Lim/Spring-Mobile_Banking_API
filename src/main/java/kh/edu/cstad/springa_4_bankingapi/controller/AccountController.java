@@ -44,8 +44,9 @@ public class AccountController {
 
     //todo Update an account information by actNo
     @PatchMapping("/{accountNumber}")
-    public AccountResponse updateAccountInfoByAccountNumber(@PathVariable String accountNumber,
-                                                    @Valid @RequestBody UpdateAccountRequest updateAccountRequest){
+    public AccountResponse updateAccountInfoByAccountNumber(
+            @PathVariable String accountNumber,
+            @RequestBody UpdateAccountRequest updateAccountRequest){
         return accountService.updateAccountInfoByAccountNumber(accountNumber, updateAccountRequest);
     }
 
@@ -57,7 +58,7 @@ public class AccountController {
     }
 
     //todo Disable an account by actNo
-    @PutMapping("/{accountNumber}/{disable}")
+    @PutMapping("/{accountNumber}/disable")
     public void disableAccountByAccountNumber(@PathVariable String accountNumber){
         accountService.disableAccountByAccountNumber(accountNumber);
     }
