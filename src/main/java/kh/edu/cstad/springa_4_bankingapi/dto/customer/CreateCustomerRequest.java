@@ -18,6 +18,6 @@ public record CreateCustomerRequest(
         String nationalCardId,
 
         @NotBlank(message = "Segment is required")
-        String segment
+        String segmentType
 ) {
 }

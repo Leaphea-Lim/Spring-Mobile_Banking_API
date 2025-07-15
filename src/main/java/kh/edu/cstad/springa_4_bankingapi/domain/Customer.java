@@ -50,7 +50,8 @@ public class Customer {
     @Column(nullable = false, unique = true)
     private String nationalCardId;
 
-    @Column(nullable = false)
-    private String segment;
+    @ManyToOne(fetch = FetchType.LAZY) // or EAGER
+    @JoinColumn(name = "segment_type_id")
+    private SegmentType segmentType;
 
 }

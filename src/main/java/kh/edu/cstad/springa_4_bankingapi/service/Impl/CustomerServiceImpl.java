@@ -3,12 +3,14 @@ package kh.edu.cstad.springa_4_bankingapi.service.Impl;
 import jakarta.transaction.Transactional;
 import kh.edu.cstad.springa_4_bankingapi.domain.Customer;
 import kh.edu.cstad.springa_4_bankingapi.domain.KYC;
+import kh.edu.cstad.springa_4_bankingapi.domain.SegmentType;
 import kh.edu.cstad.springa_4_bankingapi.dto.customer.CreateCustomerRequest;
 import kh.edu.cstad.springa_4_bankingapi.dto.customer.CustomerResponse;
 import kh.edu.cstad.springa_4_bankingapi.dto.customer.UpdateCustomerRequest;
 import kh.edu.cstad.springa_4_bankingapi.mapper.CustomerMapper;
 import kh.edu.cstad.springa_4_bankingapi.repository.CustomerRepository;
 import kh.edu.cstad.springa_4_bankingapi.repository.KYCRepository;
+import kh.edu.cstad.springa_4_bankingapi.repository.SegmentTypeRepository;
 import kh.edu.cstad.springa_4_bankingapi.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +29,10 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
     private final KYCRepository kycRepository;
+    private final SegmentTypeRepository segmentTypeRepository;
 
-//delete
+
+    //delete
     @Override
     public void deleteCustomerByPhoneNumber(String phoneNumber) {
         Customer customer = customerRepository.findByPhoneNumber(phoneNumber)
@@ -92,12 +96,18 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         Customer customer = customerMapper.toCustomer(createCustomerRequest);
+
+        String segmentName = createCustomerRequest.segmentType();
+
+        SegmentType segmentType = segmentTypeRepository.findBySegmentTypeIgnoreCase(segmentName)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "SegmentType not found"));
+
+        customer.setSegmentType(segmentType);
         customer.setIsDeleted(false);
         customer.setAccounts(new ArrayList<>());
 
-        //
         customer.setNationalCardId(createCustomerRequest.nationalCardId());
-        customer.setSegment(createCustomerRequest.segment());
+//        customer.setSegment(createCustomerRequest.segment());
 
         log.info("Customer before save: {}", customer.getId());
         log.info("Customer after save: {}", customer.getId());

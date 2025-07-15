@@ -47,7 +47,7 @@ public class AccountServiceImpl implements AccountService {
                         HttpStatus.NOT_FOUND, "Customer Not Found"
                 ));
 
-        String segment = customer.getSegment();
+        String segment = customer.getSegmentType().getSegmentType();
 
         int overLimit = switch (segment.toLowerCase()){
             case "gold" -> 50000;
