@@ -27,5 +27,5 @@ public interface CustomerMapper {
 
     SegmentTypeResponse toSegmentTypeResponse(SegmentType segmentType);
 
-    List<SegmentTypeResponse> toSegmentTypeResponseList(List<SegmentType> segmentTypes);
+//    List<SegmentTypeResponse> toSegmentTypeResponseList(List<SegmentType> segmentTypes);
 }

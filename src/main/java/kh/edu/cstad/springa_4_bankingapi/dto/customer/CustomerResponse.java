@@ -10,6 +10,6 @@ public record CustomerResponse(
         String email,
 //        String remark,
         String nationalCardId,
-        String segment
+        SegmentTypeResponse segmentType
 ) {
 }
