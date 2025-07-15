@@ -1,11 +1,14 @@
 package kh.edu.cstad.springa_4_bankingapi.service.Impl;
 
+import jakarta.transaction.Transactional;
 import kh.edu.cstad.springa_4_bankingapi.domain.Customer;
+import kh.edu.cstad.springa_4_bankingapi.domain.KYC;
 import kh.edu.cstad.springa_4_bankingapi.dto.customer.CreateCustomerRequest;
 import kh.edu.cstad.springa_4_bankingapi.dto.customer.CustomerResponse;
 import kh.edu.cstad.springa_4_bankingapi.dto.customer.UpdateCustomerRequest;
 import kh.edu.cstad.springa_4_bankingapi.mapper.CustomerMapper;
 import kh.edu.cstad.springa_4_bankingapi.repository.CustomerRepository;
+import kh.edu.cstad.springa_4_bankingapi.repository.KYCRepository;
 import kh.edu.cstad.springa_4_bankingapi.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final KYCRepository kycRepository;
 
 //delete
     @Override
@@ -32,7 +36,29 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.delete(customer);
     }
 
-//update
+//disable
+    @Transactional
+    @Override
+    public void disableByPhoneNumber(String phoneNumber) {
+        if(!customerRepository.isExistsByPhoneNumber(phoneNumber)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer phone number not found");
+        }
+        customerRepository.disableByPhoneNumber(phoneNumber);
+    }
+
+    @Override
+    public void verifyKyc(Integer customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+
+        KYC kyc = kycRepository.findByCustomer(customer)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "KYC not found"));
+
+        kyc.setIsVerified(true);
+        kycRepository.save(kyc);
+    }
+
+    //update
     @Override
     public CustomerResponse updateCustomerByPhoneNumber(String phoneNumber, UpdateCustomerRequest updateCustomerRequest) {
         Customer customer = customerRepository.findByPhoneNumber(phoneNumber)
@@ -46,7 +72,7 @@ public class CustomerServiceImpl implements CustomerService {
 //find by phone number
     @Override
     public CustomerResponse findByPhoneNumber(String phoneNumber) {
-        return customerRepository.findByPhoneNumber(phoneNumber)
+        return customerRepository.findByPhoneNumberAndIsDeletedFalse(phoneNumber)
                 .map(customerMapper::fromCustomer)
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
@@ -69,11 +95,21 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setIsDeleted(false);
         customer.setAccounts(new ArrayList<>());
 
+        //
+        customer.setNationalCardId(createCustomerRequest.nationalCardId());
+        customer.setSegment(createCustomerRequest.segment());
+
         log.info("Customer before save: {}", customer.getId());
+        log.info("Customer after save: {}", customer.getId());
 
         customer = customerRepository.save(customer);
 
-        log.info("Customer after save: {}", customer.getId());
+        //
+        KYC kyc = new KYC();
+        kyc.setCustomer(customer);
+        kyc.setIsVerified(false);
+        kycRepository.save(kyc);
+
 
         return customerMapper.fromCustomer(customer);
     }
@@ -82,7 +118,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerResponse> findAll() {
 
-        List<Customer> customers = customerRepository.findAll();
+        List<Customer> customers = customerRepository.findAllByIsDeletedFalse();
         return customers
                 .stream()
                 .map(customerMapper::fromCustomer)

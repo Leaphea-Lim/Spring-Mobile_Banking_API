@@ -13,6 +13,7 @@ public interface CustomerService {
     CustomerResponse findByPhoneNumber(String phoneNumber);
     CustomerResponse updateCustomerByPhoneNumber(String phoneNumber, UpdateCustomerRequest updateCustomerRequest);
     void deleteCustomerByPhoneNumber(String phoneNumber);
-
+    void disableByPhoneNumber(String phoneNumber);
+    void verifyKyc(Integer customerId);
 
 }

@@ -43,12 +43,14 @@ public class Customer {
     private List<Account> accounts;
 
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
-//    @JoinColumn(unique = true)
     @PrimaryKeyJoinColumn
     private KYC kyc;
 
+    //
+    @Column(nullable = false, unique = true)
+    private String nationalCardId;
 
+    @Column(nullable = false)
+    private String segment;
 
 }
-
-//concept of ... has 2: -> share primary key /

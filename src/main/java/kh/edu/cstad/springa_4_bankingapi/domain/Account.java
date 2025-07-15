@@ -39,4 +39,6 @@ public class Account {
     @ManyToOne
     private AccountType accountType;
 
+    private Integer overLimit;
+
 }

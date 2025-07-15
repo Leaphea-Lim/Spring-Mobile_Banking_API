@@ -15,6 +15,11 @@ public interface CustomerMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
      void toCustomerPartially(@MappingTarget Customer customer, UpdateCustomerRequest updateCustomerRequest);
 
+    // DTO -> Model
+    // Model -> DTO
+    // return type is converted | target data
+    // parameter is source data
+
     CustomerResponse fromCustomer(Customer customer);
     Customer toCustomer(CreateCustomerRequest createCustomerRequest);
 }

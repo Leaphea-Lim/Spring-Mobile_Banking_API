@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "accountTypes")
+@Table(name = "account_type")
 public class AccountType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto implement on primary key
@@ -20,7 +20,6 @@ public class AccountType {
 
     @Column(nullable = false)
     private String accountType;
-//    private Boolean isDeleted;
 
     @OneToMany(mappedBy = "accountType")
     private List<Account> accounts;

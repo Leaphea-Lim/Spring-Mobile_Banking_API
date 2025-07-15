@@ -40,11 +40,20 @@ public class AccountServiceImpl implements AccountService {
     //todo Create New Account
     @Override
     public AccountResponse createNewAccount(CreateAccountRequest createAccountRequest) {
+
         //find customer
         Customer customer = customerRepository.findById(createAccountRequest.customerId())
                 .orElseThrow(()-> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Customer Not Found"
                 ));
+
+        String segment = customer.getSegment();
+
+        int overLimit = switch (segment.toLowerCase()){
+            case "gold" -> 50000;
+            case "silver" -> 10000;
+            default -> 5000;
+        };
 
         if(accountRepository.existsByAccountNumber(createAccountRequest.accountNumber())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Account Number already exists!");
@@ -63,6 +72,7 @@ public class AccountServiceImpl implements AccountService {
         account.setCustomer(customer);
         account.setAccountType(accountType);
         account.setIsDeleted(false);
+        account.setOverLimit(overLimit);
 
         accountRepository.save(account);
 

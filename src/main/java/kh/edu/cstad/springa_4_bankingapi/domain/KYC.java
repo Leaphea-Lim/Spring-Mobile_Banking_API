@@ -13,9 +13,8 @@ import lombok.Setter;
 //kyc = know ur customer
 public class KYC {
     @Id
-//    @GeneratedValue(strategy = GenerationType.UUID)
-    private Integer id; //id-> uuid
-//    @Column(unique = true)
+//    @GeneratedValue(strategy = GenerationType.UUID) //id-> uuid
+    private Integer id;
     private String nationalCardId;
     private Boolean isVerified;
     private Boolean isDeleted;

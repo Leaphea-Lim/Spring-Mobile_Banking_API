@@ -23,11 +23,10 @@ public class CustomerController {
         return customerService.findAll();
     }
 
-    @GetMapping("/{phone}")
-    public CustomerResponse fineByPhoneNumber(@PathVariable String phone){
-        return customerService.findByPhoneNumber(phone);
+    @GetMapping("/{phoneNumber}")
+    public CustomerResponse fineByPhoneNumber(@PathVariable String phoneNumber){
+        return customerService.findByPhoneNumber(phoneNumber);
     }
-
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -44,11 +43,21 @@ public class CustomerController {
     }
 
     //delete
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{phoneNumber}")
-
     public void  deleteCustomerByPhoneNumber(@PathVariable String phoneNumber) {
         customerService.deleteCustomerByPhoneNumber(phoneNumber);
 
     }
 
+    //disable
+    @ResponseStatus
+    @PutMapping("/{phoneNumber}")
+    public void  disableByPhoneNumber(@PathVariable String phoneNumber){
+        customerService.disableByPhoneNumber(phoneNumber);
+    }
+    @PutMapping("/customer/{id}/verify-kyc")
+    public void verifyKyc(@PathVariable Integer id){
+        customerService.verifyKyc(id);
+    }
 }
