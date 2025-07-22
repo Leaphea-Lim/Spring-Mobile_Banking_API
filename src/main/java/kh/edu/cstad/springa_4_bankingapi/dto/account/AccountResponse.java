@@ -7,9 +7,9 @@ public record AccountResponse(
         String fullName,
 //        String accountNumber,
         String accountCurrency,
-        Double balance
+        Double balance,
 //        Integer accountTypeId,
-//        String accountType
+        String accountType
 
 ) {
 }

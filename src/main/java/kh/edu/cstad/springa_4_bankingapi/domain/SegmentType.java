@@ -9,6 +9,8 @@ import lombok.ToString;
 
 import java.util.List;
 
+/*
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,5 +31,8 @@ public class SegmentType {
     private Boolean isDeleted = false;
 
     @OneToMany(mappedBy = "segmentType")
-    private List<CustomerSegment> customerSegments;
+//    private List<CustomerSegment> customerSegments;
+    private List<Customer> customers;
 }
+
+ */

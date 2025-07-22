@@ -31,13 +31,13 @@ public class AccountController {
     }
 
     //todo Find an account by actNo
-    @GetMapping("/{accountNumber}")
+    @GetMapping("/account/{accountNumber}")
     public AccountResponse findAccountByAccountNumber(@PathVariable String accountNumber){
         return accountService.findAccountByAccountNumber(accountNumber);
     }
 
     //todo Find accounts by customer
-    @GetMapping("/{customerID}")
+    @GetMapping("/customer/{customerID}")
     public List<AccountResponse> findAccountByCustomer(@PathVariable Integer customerId){
         return accountService.findAccountByCustomer(customerId);
     }

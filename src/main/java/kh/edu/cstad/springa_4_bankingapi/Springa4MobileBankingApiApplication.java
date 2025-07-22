@@ -25,7 +25,7 @@ public class Springa4MobileBankingApiApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (accountTypeRepository.count() == 0) {
             AccountType savings = new AccountType();
-            savings.setAccountType("Savings");
+            savings.setType("Savings");
 
 //            AccountType current = new AccountType();
 //            current.setAccountType("Current");

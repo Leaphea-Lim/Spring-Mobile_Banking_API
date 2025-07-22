@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -27,6 +29,9 @@ public class Customer {
     @Column(length = 15, nullable = false)
     private String gender;
 
+    @Column(nullable = false)
+    private LocalDate dob;
+
     @Column(unique = true)
     private String email;
 
@@ -36,8 +41,31 @@ public class Customer {
     @Column(columnDefinition = "TEXT")
     private String remark;
 
+    @Column(length = 100)
+    private String address;
+    @Column(length = 50)
+    private String cityOrProvince;
+    @Column(length = 50)
+    private String country;
+    @Column(length = 50)
+    private String zipCode;
+
+    @Column(length = 50)
+    private String employmentType;
+    @Column(length = 50)
+    private String position;
+    @Column(length = 50)
+    private String companyName;
+    @Column(length = 50)
+    private String mainSourceOfIncome;
+    @Column(length = 50)
+    private BigDecimal monthlyIncomeRange;
+
     @Column(nullable = false)
     private Boolean isDeleted;
+
+//    @Column(nullable = false, unique = true)
+//    private String nationalCardId;
 
     @OneToMany(mappedBy = "customer")
     private List<Account> accounts;
@@ -46,12 +74,12 @@ public class Customer {
     @PrimaryKeyJoinColumn
     private KYC kyc;
 
-    //
-    @Column(nullable = false, unique = true)
-    private String nationalCardId;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "segment_id", nullable = false)
+//    private SegmentType segmentType;
 
-    @ManyToOne(fetch = FetchType.LAZY) // or EAGER
-    @JoinColumn(name = "segment_type_id")
-    private SegmentType segmentType;
+    @ManyToOne
+    @JoinColumn(name = "customer_segment_id", nullable = true)
+    private CustomerSegment customerSegment;
 
 }

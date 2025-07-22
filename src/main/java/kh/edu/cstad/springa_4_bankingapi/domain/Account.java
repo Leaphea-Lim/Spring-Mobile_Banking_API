@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,6 +22,9 @@ public class Account {
     @Column(unique = true, nullable = false, length = 32)
     private String accountNumber;
 
+    @Column(unique = true, nullable = false, length = 50)
+    private String accountName;
+
 //    @Column(nullable = false, length = 50) -> custom column
 //    private String accountType ;
 
@@ -29,16 +34,23 @@ public class Account {
     @Column(nullable = false)
     private Double balance;
 
+
+    @Column(nullable = false)
+    private BigDecimal overLimit;
+
+
+    @Column(nullable = false)
+    private Boolean isHide;
+
     @Column(nullable = false)
     private Boolean isDeleted;
 
     @ManyToOne
-    @JoinColumn(name = "cust_id")
+    @JoinColumn(name = "cust_id", referencedColumnName = "id")
     private Customer customer;
 
     @ManyToOne
     private AccountType accountType;
 
-    private Integer overLimit;
 
 }

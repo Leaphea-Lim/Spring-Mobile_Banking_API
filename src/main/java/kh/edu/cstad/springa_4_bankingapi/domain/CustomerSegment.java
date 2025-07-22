@@ -2,29 +2,32 @@ package kh.edu.cstad.springa_4_bankingapi.domain;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "customer_segments")
 public class CustomerSegment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer customerSegmentId;
+    private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "cust_id", nullable = false)
-    private Customer customer;
+    @Column(nullable = false, unique = true)
+    private String segment;
 
-    @ManyToOne
-    @JoinColumn(name = "segment_id", nullable = false)
-    private SegmentType segmentType;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
+    @Column(nullable = false)
+    private Boolean isDeleted;
+
+    @OneToMany(mappedBy = "customerSegment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Customer> customers;
 }

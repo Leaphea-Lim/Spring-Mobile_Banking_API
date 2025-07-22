@@ -11,11 +11,15 @@ import kh.edu.cstad.springa_4_bankingapi.repository.AccountRepository;
 import kh.edu.cstad.springa_4_bankingapi.repository.AccountTypeRepository;
 import kh.edu.cstad.springa_4_bankingapi.repository.CustomerRepository;
 import kh.edu.cstad.springa_4_bankingapi.service.AccountService;
+import kh.edu.cstad.springa_4_bankingapi.util.CurrencyUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Random;
 
 
 @Service
@@ -42,37 +46,78 @@ public class AccountServiceImpl implements AccountService {
     public AccountResponse createNewAccount(CreateAccountRequest createAccountRequest) {
 
         //find customer
-        Customer customer = customerRepository.findById(createAccountRequest.customerId())
+        Customer customer = customerRepository
+                .findByPhoneNumber(createAccountRequest.phoneNumber())
                 .orElseThrow(()-> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Customer Not Found"
+                        HttpStatus.BAD_REQUEST, "Customer Phone Number Not Found"
                 ));
 
-        String segment = customer.getSegmentType().getSegmentType();
-
-        int overLimit = switch (segment.toLowerCase()){
-            case "gold" -> 50000;
-            case "silver" -> 10000;
-            default -> 5000;
-        };
-
-        if(accountRepository.existsByAccountNumber(createAccountRequest.accountNumber())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Account Number already exists!");
-        }
-
-        if(!customerRepository.existsById(createAccountRequest.customerId())){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer Not Found!");
-        }
-
-        AccountType accountType = accountTypeRepository.findById(createAccountRequest.accountType())
+        AccountType accountType = accountTypeRepository
+                .findByType(String.valueOf(createAccountRequest.accountType()))
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Account type not found"));
-
+                        HttpStatus.BAD_REQUEST, "Account type not found"));
 
         Account account = accountMapper.toAccount(createAccountRequest);
-        account.setCustomer(customer);
         account.setAccountType(accountType);
+        account.setCustomer(customer);
+
+//        String segment = customer.getSegmentType().getSegmentType();
+//
+//        int overLimit = switch (segment.toLowerCase()){
+//            case "gold" -> 50000;
+//            case "silver" -> 10000;
+//            default -> 5000;
+//        };
+
+        if (account.getAccountNumber().isBlank()) { // Auto generate
+            String actNo;
+            do {
+                actNo = String.format("%09d", new Random().nextInt(1_000_000_000)); // Max: 999,999,999
+            } while (accountRepository.existsByAccountNumber(actNo));
+            account.setAccountNumber(actNo);
+        } else { // From DTO, check validation actNo
+            if (accountRepository.existsByAccountNumber(account.getAccountNumber())) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "Account number already exists");
+            }
+        }
+
+        account.setIsHide(false);
         account.setIsDeleted(false);
-        account.setOverLimit(overLimit);
+        account.setAccountCurrency(String.valueOf(createAccountRequest.accountCurrency()));
+//        account.setOverLimit(overLimit);
+
+        if (account.getCustomer().getCustomerSegment().getSegment().equals("REGULAR")) {
+            account.setOverLimit(BigDecimal.valueOf(5000));
+        } else if (account.getCustomer().getCustomerSegment().getSegment().equals("SILVER")) {
+            account.setOverLimit(BigDecimal.valueOf(50000));
+        } else {
+            account.setOverLimit(BigDecimal.valueOf(100000));
+        }
+
+        // Validate balance
+        switch (createAccountRequest.accountCurrency()) {
+            case CurrencyUtil.DOLLAR -> {
+                if (createAccountRequest.balance().compareTo(BigDecimal.TEN) < 0) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Balance must be greater than 10 dollars");
+                }
+            }
+            case CurrencyUtil.RIEL -> {
+                if (createAccountRequest.balance().compareTo(BigDecimal.valueOf(40000)) < 0) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Balance must be greater than 40000 riels");
+                }
+            }
+            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Currency is not available");
+        }
+
+//        if(accountRepository.existsByAccountNumber(createAccountRequest.accountNumber())){
+//            throw new ResponseStatusException(HttpStatus.CONFLICT, "Account Number already exists!");
+//        }
+//
+//        if(!customerRepository.existsById(createAccountRequest.customerId())){
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer Not Found!");
+//        }
 
         accountRepository.save(account);
 

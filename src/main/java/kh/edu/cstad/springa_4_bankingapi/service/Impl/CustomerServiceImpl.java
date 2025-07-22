@@ -2,15 +2,17 @@ package kh.edu.cstad.springa_4_bankingapi.service.Impl;
 
 import jakarta.transaction.Transactional;
 import kh.edu.cstad.springa_4_bankingapi.domain.Customer;
+import kh.edu.cstad.springa_4_bankingapi.domain.CustomerSegment;
 import kh.edu.cstad.springa_4_bankingapi.domain.KYC;
-import kh.edu.cstad.springa_4_bankingapi.domain.SegmentType;
+//import kh.edu.cstad.springa_4_bankingapi.domain.SegmentType;
 import kh.edu.cstad.springa_4_bankingapi.dto.customer.CreateCustomerRequest;
 import kh.edu.cstad.springa_4_bankingapi.dto.customer.CustomerResponse;
 import kh.edu.cstad.springa_4_bankingapi.dto.customer.UpdateCustomerRequest;
 import kh.edu.cstad.springa_4_bankingapi.mapper.CustomerMapper;
 import kh.edu.cstad.springa_4_bankingapi.repository.CustomerRepository;
+import kh.edu.cstad.springa_4_bankingapi.repository.CustomerSegmentRepository;
 import kh.edu.cstad.springa_4_bankingapi.repository.KYCRepository;
-import kh.edu.cstad.springa_4_bankingapi.repository.SegmentTypeRepository;
+//import kh.edu.cstad.springa_4_bankingapi.repository.SegmentTypeRepository;
 import kh.edu.cstad.springa_4_bankingapi.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +31,8 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
     private final KYCRepository kycRepository;
-    private final SegmentTypeRepository segmentTypeRepository;
+//    private final SegmentTypeRepository segmentTypeRepository;
+    private final CustomerSegmentRepository customerSegmentRepository;
 
 
     //delete
@@ -52,14 +55,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void verifyKyc(Integer customerId) {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
-
-        KYC kyc = kycRepository.findByCustomer(customer)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "KYC not found"));
-
-        kyc.setIsVerified(true);
-        kycRepository.save(kyc);
+//        Customer customer = customerRepository.findById(customerId)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+//
+//        KYC kyc = kycRepository.findByCustomer(customer)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "KYC not found"));
+//
+//        kyc.setIsVerified(true);
+//        kycRepository.save(kyc);
     }
 
     //update
@@ -67,7 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponse updateCustomerByPhoneNumber(String phoneNumber, UpdateCustomerRequest updateCustomerRequest) {
         Customer customer = customerRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
-        customerMapper.toCustomerPartially(customer, updateCustomerRequest);
+        customerMapper.toCustomerPartially(updateCustomerRequest, customer);
         customerRepository.save(customer);
 
         return customerMapper.fromCustomer(customer);
@@ -95,31 +98,38 @@ public class CustomerServiceImpl implements CustomerService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Phone Number already exists!");
         }
 
+
+        // Validate customer segment
+        CustomerSegment customerSegment = customerSegmentRepository
+                .findBySegment(createCustomerRequest.customerSegment())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT,
+                        "Customer segment not found!"));
+
         Customer customer = customerMapper.toCustomer(createCustomerRequest);
 
-        String segmentName = createCustomerRequest.segmentType();
+//        String segmentName = createCustomerRequest.segmentType();
 
-        SegmentType segmentType = segmentTypeRepository.findBySegmentTypeIgnoreCase(segmentName)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "SegmentType not found"));
+//        SegmentType segmentType = segmentTypeRepository.findBySegmentTypeIgnoreCase(segmentName)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "SegmentType not found"));
 
-        customer.setSegmentType(segmentType);
+        KYC kyc = new KYC();
+        kyc.setNationalCardId(createCustomerRequest.nationalCardId());
+        kyc.setCustomer(customer);
+        kyc.setIsVerified(false);
+        kyc.setIsDeleted(false);
+        kyc.setCustomer(customer);
+//        kycRepository.save(kyc);
+
+//        customer.setSegmentType(segmentType);
         customer.setIsDeleted(false);
         customer.setAccounts(new ArrayList<>());
-
-        customer.setNationalCardId(createCustomerRequest.nationalCardId());
+        customer.setCustomerSegment(customerSegment);
+        customer.setKyc(kyc);
 //        customer.setSegment(createCustomerRequest.segment());
 
         log.info("Customer before save: {}", customer.getId());
-        log.info("Customer after save: {}", customer.getId());
-
         customer = customerRepository.save(customer);
-
-        //
-        KYC kyc = new KYC();
-        kyc.setCustomer(customer);
-        kyc.setIsVerified(false);
-        kycRepository.save(kyc);
-
+        log.info("Customer after save: {}", customer.getId());
 
         return customerMapper.fromCustomer(customer);
     }
