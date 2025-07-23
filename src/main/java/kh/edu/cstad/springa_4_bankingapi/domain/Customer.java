@@ -79,7 +79,7 @@ public class Customer {
 //    private SegmentType segmentType;
 
     @ManyToOne
-    @JoinColumn(name = "customer_segment_id", nullable = true)
+//    @JoinColumn(name = "customer_segment_id", nullable = true)
     private CustomerSegment customerSegment;
 
 }

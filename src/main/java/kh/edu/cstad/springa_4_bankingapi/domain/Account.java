@@ -22,7 +22,7 @@ public class Account {
     @Column(unique = true, nullable = false, length = 32)
     private String accountNumber;
 
-    @Column(unique = true, nullable = false, length = 50)
+    @Column(nullable = false, length = 50)
     private String accountName;
 
 //    @Column(nullable = false, length = 50) -> custom column
@@ -32,7 +32,7 @@ public class Account {
     private String accountCurrency;
 
     @Column(nullable = false)
-    private Double balance;
+    private BigDecimal balance;
 
 
     @Column(nullable = false)
@@ -46,7 +46,7 @@ public class Account {
     private Boolean isDeleted;
 
     @ManyToOne
-    @JoinColumn(name = "cust_id", referencedColumnName = "id")
+    @JoinColumn(nullable = false, name = "cust_id", referencedColumnName = "id")
     private Customer customer;
 
     @ManyToOne

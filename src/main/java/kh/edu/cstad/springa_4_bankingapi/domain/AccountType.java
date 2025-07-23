@@ -16,7 +16,7 @@ import java.util.List;
 public class AccountType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto implement on primary key
-    private Integer id;
+    private Long id;
 
 //    @Column(nullable = false, unique = true)
     private String type;

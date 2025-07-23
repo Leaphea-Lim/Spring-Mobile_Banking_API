@@ -19,7 +19,7 @@ public class CustomerSegment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 100)
     private String segment;
 
     @Column(columnDefinition = "TEXT")
@@ -28,6 +28,6 @@ public class CustomerSegment {
     @Column(nullable = false)
     private Boolean isDeleted;
 
-    @OneToMany(mappedBy = "customerSegment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customerSegment", fetch = FetchType.LAZY)
     private List<Customer> customers;
 }

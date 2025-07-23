@@ -5,33 +5,33 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
+@Table(name = "transactions")
 public class Transaction   {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "transaction_type_id")
-    private TransactionType transactionType;
-
-    private Double amount;
-
+    private BigDecimal amount;
     private String remark;
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
-    private Customer sender;
-
-    @ManyToOne
-    @JoinColumn(name = "receiver_id")
-    private Customer receiver;
-
     private Boolean isDeleted;
 
-    private LocalDateTime timestamp = LocalDateTime.now();
+    @ManyToOne(optional = false)
+//    @JoinColumn(name = "transaction_type_id")
+    private TransactionType transactionType;
+
+    @ManyToOne(optional = false)
+//    @JoinColumn(name = "sender_id")
+    private Account sender;
+
+    @ManyToOne(optional = false)
+//    @JoinColumn(name = "receiver_id")
+    private Account receiver;
+
+
 }
