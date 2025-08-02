@@ -25,9 +25,6 @@ public class Account {
     @Column(nullable = false, length = 50)
     private String accountName;
 
-//    @Column(nullable = false, length = 50) -> custom column
-//    private String accountType ;
-
     @Column(nullable = false, length = 50)
     private String accountCurrency;
 

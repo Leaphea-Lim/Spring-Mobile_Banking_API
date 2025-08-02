@@ -18,7 +18,6 @@ public class AccountType {
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto implement on primary key
     private Long id;
 
-//    @Column(nullable = false, unique = true)
     private String type;
 
     @OneToMany(mappedBy = "accountType")

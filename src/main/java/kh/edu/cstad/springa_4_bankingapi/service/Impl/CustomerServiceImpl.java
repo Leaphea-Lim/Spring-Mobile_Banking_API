@@ -34,7 +34,6 @@ public class CustomerServiceImpl implements CustomerService {
 //    private final SegmentTypeRepository segmentTypeRepository;
     private final CustomerSegmentRepository customerSegmentRepository;
 
-
     //delete
     @Override
     public void deleteCustomerByPhoneNumber(String phoneNumber) {
@@ -118,7 +117,7 @@ public class CustomerServiceImpl implements CustomerService {
         kyc.setIsVerified(false);
         kyc.setIsDeleted(false);
         kyc.setCustomer(customer);
-//        kycRepository.save(kyc);
+        kycRepository.save(kyc);
 
 //        customer.setSegmentType(segmentType);
         customer.setIsDeleted(false);
